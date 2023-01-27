@@ -37,6 +37,12 @@
 	const renamePokemon = (name: String) =>{
 		if (name == "nidoran-m") return "nidoran";
 		else if (name == "mr-mime") return "mrmime";
+		else if (name == "deoxys-normal") return "deoxys";
+		else if (name == "shaymin-land") return "shaymin";
+		else if (name == "ho-oh") return "hooh";
+		else if (name == "mime-jr") return "mimejr";
+		else if (name == "giratina-altered") return "giratina";
+		else if (name == "wormadam-plant") return "wormadam";
 		return name;
 	}
 </script>

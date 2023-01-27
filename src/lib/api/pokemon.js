@@ -6,7 +6,7 @@ import Api from "../services/Api";
 // Method to get a list of all Pokemon
 export const getPokemonList = async () => {
     try {
-        const response = await Api.get("/pokemon?limit=155");
+        const response = await Api.get("/pokemon?limit=525");
         return response.results;
     } catch (error) {
         console.error(error);

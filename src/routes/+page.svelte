@@ -10,66 +10,22 @@
 	import Panel from '$lib/components/Panel.svelte';
 	import PokemonPanel from '$lib/components/PokemonPanel.svelte';
 
+	let pokemonInfo: any = null;
+
 	// Get the data from the api, after the page is mounted.
 	onMount(async () => {
+		const res2 = await getPokemonByName('abra');
 		const res = await getPokemonList();
+		setSelectedPokemon(res2)
 		pokemonList = res;
 	});
 
-	let generation = [
-		'All Gen',
-		'Gen 1',
-		'Gen 2',
-		'Gen 3',
-		'Gen 4',
-		'Gen 5',
-		'Gen 6',
-		'Gen 7',
-		'Gen 8',
-		'Gen 9'
-	];
-
-	let type = [
-		'All Type',
-		'normal',
-		'fire',
-		'water',
-		'electric',
-		'grass',
-		'ice',
-		'fighting',
-		'poison',
-		'ground',
-		'flying',
-		'psychic',
-		'bug',
-		'rock',
-		'ghost',
-		'dragon',
-		'dark',
-		'steel'
-	];
-
-	$: pokemonInfo = {
-		name: 'pikachu',
-		num: 25,
-		type: ['electric'],
-		ability: [],
-		ability_hide: [],
-		height: 0,
-		weight: 0,
-		base_experience: 0,
-		base_stats: [],
-	};
-
-	function handleMessage(event: any) {
-		let data = event.detail.data;
-
+	const setSelectedPokemon = (data: any) => {
 		let name = data.name;
 		let num = data.id;
 		let typing = data.types.map((e: any) => e.type.name);
-		let abilities = data.abilities.flatMap((e: any) => e.is_hidden ? [] : e.ability.name);
-		let abilities_hidden = data.abilities.flatMap((e: any) => !e.is_hidden ? [] : e.ability.name);
+		let abilities = data.abilities.flatMap((e: any) => (e.is_hidden ? [] : e.ability.name));
+		let abilities_hidden = data.abilities.flatMap((e: any) => (!e.is_hidden ? [] : e.ability.name));
 		let base_stats = data.stats.flatMap((e: any) => e.base_stat);
 		pokemonInfo = {
 			name: name,
@@ -80,9 +36,13 @@
 			height: data.height,
 			weight: data.weight,
 			base_experience: data.base_experience,
-			base_stats: base_stats,
+			base_stats: base_stats
 		};
-		console.log(pokemonInfo)
+	};
+
+	function handleMessage(event: any) {
+		let data = event.detail.data;
+		setSelectedPokemon(data);
 	}
 </script>
 
@@ -104,8 +64,8 @@
 				/>
 			</div>
 			<div class="flex flex-row gap-3 min-h-6 mt-3">
-				<DropDown icon={pokeball} contents={generation} />
-				<DropDown icon={pokeball} contents={type} />
+				<DropDown contents={'generation'} />
+				<DropDown contents={'typing'} />
 			</div>
 
 			<div class="grid grid-cols-3 mt-2 gap-2">
@@ -116,7 +76,9 @@
 		</div>
 
 		<div class="basis-2/5 relative">
-			<PokemonPanel pokemondata={pokemonInfo} />
+			{#if pokemonInfo != null}
+				<PokemonPanel pokemondata={pokemonInfo} />
+			{/if}
 		</div>
 	</div>
 </section>
